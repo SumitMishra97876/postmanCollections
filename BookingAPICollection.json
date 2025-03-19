@@ -1,0 +1,313 @@
+{
+	"info": {
+		"_postman_id": "f988e336-9d69-463d-bdbe-4755612fe439",
+		"name": "BookingAPIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19306631",
+		"_collection_link": "https://grey-capsule-132140.postman.co/workspace/APILearning2025~0edd1e20-2f14-4181-a86a-b287a5c6b8f0/collection/19306631-f988e336-9d69-463d-bdbe-4755612fe439?action=share&source=collection_link&creator=19306631"
+	},
+	"item": [
+		{
+			"name": "CreateToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// const tokenID=pm.response.json().token;\r",
+							"\r",
+							"// console.log(\"Token is ===> \" +tokenID);\r",
+							"\r",
+							"// pm.variables.set(\"token_id\",tokenID);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/auth",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllBookings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/booking",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const bookingID=pm.response.json().bookingid;\r",
+							"console.log(\"booking id is \" +bookingID);\r",
+							"pm.variables.set(\"booking_id\",bookingID);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstname\" : \"Sumit\",\n    \"lastname\" : \"Turner\",\n    \"totalprice\" : 111,\n    \"depositpaid\" : true,\n    \"bookingdates\" : {\n        \"checkin\" : \"2018-01-01\",\n        \"checkout\" : \"2019-01-01\"\n    },\n    \"additionalneeds\" : \"Breakfast\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/booking",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBookingById",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"  method: 'POST',\r",
+							"  url: pm.environment.get(\"baseURL\")+'/booking',\r",
+							"  header:{\r",
+							"    'Content-Type': 'application/json'\r",
+							"  },\r",
+							"  body:{\r",
+							"    mode: 'raw',\r",
+							"    raw: JSON.stringify({\r",
+							"    \"firstname\" : pm.iterationData.get(\"firstname\"),\r",
+							"    \"lastname\" : pm.iterationData.get(\"lastname\"),\r",
+							"    \"totalprice\" : pm.iterationData.get(\"totalprice\"),\r",
+							"    \"depositpaid\" : pm.iterationData.get(\"depositpaid\"),\r",
+							"    \"bookingdates\" : {\r",
+							"        \"checkin\" : pm.iterationData.get(\"checkin\"),\r",
+							"        \"checkout\" : pm.iterationData.get(\"checkout\")\r",
+							"    },\r",
+							"    \"additionalneeds\" : pm.iterationData.get(\"additionalneeds\")\r",
+							"\r",
+							"    })\r",
+							"  }\r",
+							"\r",
+							"},function(error,response){\r",
+							"    if(error){\r",
+							"        console.log(error);\r",
+							"    }else{\r",
+							"        const resp=JSON.parse(response.text());\r",
+							"        const bookinID=resp.bookingid;\r",
+							"        console.log(\"booking id  is =====>> \" +bookinID);\r",
+							"        pm.variables.set(\"new_booking_id\",bookinID);\r",
+							"    }\r",
+							"\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/booking/{{new_booking_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"booking",
+						"{{new_booking_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateBookingById",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"  method: 'POST',\r",
+							"  url: pm.environment.get(\"baseURL\")+'/auth',\r",
+							"  header:{\r",
+							"    'Content-Type': 'application/json'\r",
+							"  },\r",
+							"  body:{\r",
+							"    mode: 'raw',\r",
+							"    raw: JSON.stringify({\r",
+							"        \"username\": pm.environment.get(\"username\"),\r",
+							"        \"password\": pm.environment.get(\"password\")\r",
+							"    })\r",
+							"  }\r",
+							"\r",
+							"},function(error,response){\r",
+							"    if(error){\r",
+							"        console.log(error);\r",
+							"    }else{\r",
+							"        const resp=JSON.parse(response.text());\r",
+							"        const tokenId=resp.token;\r",
+							"        console.log(\"token is =====>> \" +tokenId);\r",
+							"        pm.variables.set(\"new_token\",tokenId);\r",
+							"    }\r",
+							"\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{new_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstname\" : \"Snehit\",\n    \"lastname\" : \"Tiwary\",\n    \"totalprice\" : 2500,\n    \"depositpaid\" : false,\n    \"bookingdates\" : {\n        \"checkin\" : \"2018-01-01\",\n        \"checkout\" : \"2019-01-01\"\n    },\n    \"additionalneeds\" : \"EveningSnacks\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/booking/{{new_booking_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"booking",
+						"{{new_booking_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteBookingById",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"  method: 'POST',\r",
+							"  url: pm.environment.get(\"baseURL\")+'/auth',\r",
+							"  header:{\r",
+							"    'Content-Type': 'application/json'\r",
+							"  },\r",
+							"  body:{\r",
+							"    mode: 'raw',\r",
+							"    raw: JSON.stringify({\r",
+							"        \"username\": pm.environment.get(\"username\"),\r",
+							"        \"password\": pm.environment.get(\"password\")\r",
+							"    })\r",
+							"  }\r",
+							"\r",
+							"},function(error,response){\r",
+							"    if(error){\r",
+							"        console.log(error);\r",
+							"    }else{\r",
+							"        const resp=JSON.parse(response.text());\r",
+							"        const tokenId=resp.token;\r",
+							"        console.log(\"token is =====>> \" +tokenId);\r",
+							"        pm.variables.set(\"new_token\",tokenId);\r",
+							"    }\r",
+							"\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "token={{new_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/booking/{{booking_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"booking",
+						"{{booking_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
