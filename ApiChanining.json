@@ -1,0 +1,262 @@
+{
+	"info": {
+		"_postman_id": "23c28bf9-ef6d-4ba0-9f4a-d1cb06c88ddd",
+		"name": "ApiChanining",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19306631",
+		"_collection_link": "https://grey-capsule-132140.postman.co/workspace/APILearning2025~0edd1e20-2f14-4181-a86a-b287a5c6b8f0/collection/19306631-23c28bf9-ef6d-4ba0-9f4a-d1cb06c88ddd?action=share&source=collection_link&creator=19306631"
+	},
+	"item": [
+		{
+			"name": "GetAllUsers",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{toeknId}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{goRestBaseUrl}}/public/v2/users",
+					"host": [
+						"{{goRestBaseUrl}}"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response=pm.response.json();\r",
+							"const user_id=response.id;\r",
+							"console.log(\"created user id is -----> \" + user_id);\r",
+							" pm.variables.set(\"goRestUserID\", user_id);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{toeknId}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n       \r\n        \"name\": \"{{$randomFullName}}\",\r\n        \"email\": \"API_{{$randomUserName}}@google.com\",\r\n        \"gender\": \"male\",\r\n        \"status\": \"active\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{goRestBaseUrl}}/public/v2/users",
+					"host": [
+						"{{goRestBaseUrl}}"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserbyID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"valid user id\",function() {\r",
+							"   const newid= pm.variables.get(\"goRestUserID\");\r",
+							"   var jsonData=pm.response.json();\r",
+							"   console.log(\"user id is ----> \" +newid);\r",
+							"   pm.expect(jsonData.id).to.eql(newid);\r",
+							"}\r",
+							")"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{toeknId}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{goRestBaseUrl}}/public/v2/users/{{goRestUserID}}",
+					"host": [
+						"{{goRestBaseUrl}}"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users",
+						"{{goRestUserID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateUserByID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"validate update is successful\", function() {\r",
+							"    var response=pm.response.json();\r",
+							"\r",
+							"    const stat=response.status;\r",
+							"    pm.expect(stat).to.eql(\"inactive\");\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{toeknId}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\":\"inactive\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{goRestBaseUrl}}/public/v2/users/{{goRestUserID}}",
+					"host": [
+						"{{goRestBaseUrl}}"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users",
+						"{{goRestUserID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteUserById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{toeknId}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{goRestBaseUrl}}/public/v2/users/{{goRestUserID}}",
+					"host": [
+						"{{goRestBaseUrl}}"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users",
+						"{{goRestUserID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetDeletedUserByid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{toeknId}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{goRestBaseUrl}}/public/v2/users/{{goRestUserID}}",
+					"host": [
+						"{{goRestBaseUrl}}"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users",
+						"{{goRestUserID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
