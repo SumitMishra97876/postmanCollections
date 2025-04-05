@@ -1,0 +1,10 @@
+firstname,lastname,totalprice,depositpaid,checkin,checkout,additionalneeds
+Trent,Landon,1800,TRUE,"        2024-01-01
+","        2025-01-01
+",Dinner
+Justin,Townsend,2000,FALSE,"        2023-01-05
+","        2024-01-01
+",Breakfast
+Normal,Smallridge,3400,TRUE,"        2024-01-01
+","        2025-01-01
+",Lunch
